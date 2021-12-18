@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% block css %} {{parent()}}{% endblock %}
+
+{% block body %}
+
+    <header>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand  {% if  path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params') )  == "/"  %} active {% endif %}" href="{{path('main_homepage')}}" >Shoefony</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="{{path('main_presentation')}}" class="{% if  path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params') )  == "/presentation"  %} active {% endif %}">Présentation</a>
+                        </li>
+                        <li>
+                            <a href="{{path('store_products')}}" class="{% if  app.request.attributes.get('_route')  starts with "store_"  %} active {% endif %}">Nos produits</a>
+                        </li>
+                        <li>
+                            <a href="{{path('main_contact')}}" class="{% if  path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params') )  == "/contact"  %} active {% endif %}">Contact</a>
+                        </li>
+                    </ul>
+
+                    <form class="navbar-form navbar-right">
+                        <div class="form-group">
+                            <input type="text" placeholder="Recherche" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-success">OK</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+    {% block content %}{% endblock %}
+    <hr/>
+
+            <!-- Footer -->
+            <footer>
+                <p>Copyright &copy; Shoefony 2019 | <label>{{ "now"|date("m/d/Y") }}</label></p>
+            </footer>
+    </div>
+
+
+
+
+    {% block javascript %}{{parent()}}{% endblock %}
+{% endblock  %}
+
