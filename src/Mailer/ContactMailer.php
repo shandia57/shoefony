@@ -23,6 +23,7 @@ class ContactMailer
 
     public function send(Contact $contact)
     {
+        echo $contact->getEmail();
         $email = (new Email())
         ->from($contact->getEmail())
         ->to($this->contactEmailAddress)

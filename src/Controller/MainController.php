@@ -10,13 +10,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class MainController extends AbstractController
 {
     private ContactMailer $contactMailer;
-    public function __construct(ContactMailer $contactMailer)
+    private $em;
+    public function __construct(ContactMailer $contactMailer, EntityManagerInterface $em)
     {
         $this->contactMailer = $contactMailer;
+        $this->em = $em;
     }
 
     #[Route('/', name: 'main_homepage')]
@@ -49,9 +52,11 @@ class MainController extends AbstractController
         // Dans le cas de la soumission d'un formulaire valide
         if($form->isSubmitted() && $form->isValid()){
 
+            $this->em->persist($contact);
+            $this->em->flush();
+            
             // Actions à effectuer après envoi du formulaire
             $this->addFlash('success', 'Merci, votre message a été pris en compte !');
-            
             $this->contactMailer->send($contact);
 
             return $this->redirectToRoute('main_contact');
@@ -64,3 +69,6 @@ class MainController extends AbstractController
 
 
 }
+
+
+
