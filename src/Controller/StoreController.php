@@ -19,13 +19,14 @@ class StoreController extends AbstractController
         $this->em = $em;
     }
 
-    #[Route('/store/product/{id}/details', name: 'store_show_product', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function showProduct(Request $request, int $id): Response
+    #[Route('/store/product/{id}/{slug}', name: 'store_show_product', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function showProduct(Request $request, int $id, string $slug): Response
     {
         
         return $this->render('store/index.html.twig', [
             'controller_name' => 'StoreController',
             'id' => $id,
+            'slug' => $slug
         ]);
     }
 

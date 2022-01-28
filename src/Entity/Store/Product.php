@@ -2,8 +2,11 @@
 
 namespace App\Entity\Store;
 
+use App\Entity\Color;
 use App\Entity\Image;
 use App\Repository\Store\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,6 +17,7 @@ class Product
 {
     public function __construct(){
         $this->createdAt = new \DateTime();
+        $this->color = new ArrayCollection();
     }
 
     /**
@@ -48,6 +52,21 @@ class Product
      * @ORM\JoinColumn(nullable=false)
      */
     private $Image;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $longDescription;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slug;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Color::class, mappedBy="Product")
+     */
+    private $color;
 
     public function getId(): ?int
     {
@@ -116,6 +135,57 @@ class Product
     public function setImage(Image $Image): self
     {
         $this->Image = $Image;
+
+        return $this;
+    }
+
+    public function getLongDescription(): ?string
+    {
+        return $this->longDescription;
+    }
+
+    public function setLongDescription(string $longDescription): self
+    {
+        $this->longDescription = $longDescription;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Color[]
+     */
+    public function getColor(): Collection
+    {
+        return $this->color;
+    }
+
+    public function addColor(Color $color): self
+    {
+        if (!$this->color->contains($color)) {
+            $this->color[] = $color;
+            $color->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeColor(Color $color): self
+    {
+        if ($this->color->removeElement($color)) {
+            $color->removeProduct($this);
+        }
 
         return $this;
     }
