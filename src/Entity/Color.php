@@ -25,10 +25,6 @@ class Color
      */
     private $name;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Product::class, inversedBy="color")
-     */
-    private $Product;
 
     public function __construct()
     {
@@ -52,27 +48,5 @@ class Color
         return $this;
     }
 
-    /**
-     * @return Collection|Product[]
-     */
-    public function getProduct(): Collection
-    {
-        return $this->Product;
-    }
-
-    public function addProduct(Product $product): self
-    {
-        if (!$this->Product->contains($product)) {
-            $this->Product[] = $product;
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): self
-    {
-        $this->Product->removeElement($product);
-
-        return $this;
-    }
+   
 }

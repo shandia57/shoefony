@@ -8,6 +8,7 @@ use App\Repository\Store\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use function Symfony\Component\String\u;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -18,6 +19,7 @@ class Product
     public function __construct(){
         $this->createdAt = new \DateTime();
         $this->color = new ArrayCollection();
+        $this->brands = new ArrayCollection();
     }
 
     /**
@@ -63,10 +65,19 @@ class Product
      */
     private $slug;
 
+
     /**
-     * @ORM\ManyToMany(targetEntity=Color::class, mappedBy="Product")
+     * @ORM\ManyToOne(targetEntity=Brands::class, inversedBy="products")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Brands;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Color::class)
      */
     private $color;
+
+
 
     public function getId(): ?int
     {
@@ -75,12 +86,15 @@ class Product
 
     public function getName(): ?string
     {
+
         return $this->name;
     }
 
     public function setName(?string $name): self
     {
+
         $this->name = $name;
+        $this->slug = u($name)->lower()->replace(' ', '-')->toString();
 
         return $this;
     }
@@ -163,6 +177,18 @@ class Product
         return $this;
     }
 
+    public function getBrands(): ?Brands
+    {
+        return $this->Brands;
+    }
+
+    public function setBrands(?Brands $Brands): self
+    {
+        $this->Brands = $Brands;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Color[]
      */
@@ -175,7 +201,6 @@ class Product
     {
         if (!$this->color->contains($color)) {
             $this->color[] = $color;
-            $color->addProduct($this);
         }
 
         return $this;
@@ -183,12 +208,12 @@ class Product
 
     public function removeColor(Color $color): self
     {
-        if ($this->color->removeElement($color)) {
-            $color->removeProduct($this);
-        }
+        $this->color->removeElement($color);
 
         return $this;
     }
+
+
 
     
 }

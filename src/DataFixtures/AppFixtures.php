@@ -3,9 +3,9 @@
 namespace App\DataFixtures;
 
 use App\Entity\Store\Product;
-use App\Entity\Store\Brand;
+use App\Entity\Store\Brands;
 use App\Entity\Image;
-use App\Entity\Colors;
+use App\Entity\Color;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -13,16 +13,63 @@ class AppFixtures extends Fixture
 {
     /** @var ObjectManager */
     private $manager;
+    
+    private const DATA_BRANDS = [
+        ['ADIDAS'],
+        ['NIKE'],
+        ['PUMAS'],
+        ['ASICS']
+
+    ];
+
+    private const DATA_COLORS = [
+        ['BLUE'],
+        ['RED'],
+        ['GREEN'],
+        ['YELLOW'],
+        ['PURPLE'],
+        ['WHITE'],
+        ['BLACK'],
+        ['ORANGE'],
+        ['GREY'],
+
+    ];
+
     public function load(ObjectManager $manager): void
     {
         $this->manager = $manager;
+        $this->loadBrands();
+        $this->loadColors();
         $this->loadProducts();
         $manager->flush();
     }
 
+    public function loadBrands():void{
+        foreach(self::DATA_BRANDS as $key => [$name]){
+            $brand = (new Brands())
+                ->setName($name);
+            
+            $this->manager->persist($brand);
+            $this->addReference(Brands::class .$key, $brand);
+        }
+    }
+
+    public function loadColors():void{
+        foreach(self::DATA_COLORS as $key => [$name]){
+            $color = (new Color())
+                ->setName($name);
+            
+            $this->manager->persist($color);
+            $this->addReference(Color::class .$key, $color);
+        }
+    }
+
+
     private function loadProducts(): void
     {
         for($i = 1; $i < 15; $i++){
+            /**@var Brands $brand */
+            $brand = $this->getReference(Brands::class .random_int(0, count(self::DATA_BRANDS) - 1));
             
             $image = (new Image())
 
@@ -31,18 +78,22 @@ class AppFixtures extends Fixture
 
             $product = (new Product())
                 ->setName('product '.$i)
-                ->setSlug('product-'.$i)
                 ->setDescription('Produit de description '.$i)
                 ->setLongDescription('Produit de description '.$i)
                 ->setPrice(mt_rand(10,100))
-                ->setImage($image);
+                ->setImage($image)
+                ->setBrands($brand);
 
-            $brand = (new Brand())
-                ->setName('Nike')
-                ->setProduct($product);
+            for($j = 0; $j < random_int(0, count(self::DATA_COLORS)-1); $j++){
+                if(random_int(0,1)){
+                    /**@var Color $color */
+                    $color = $this->getReference(Color::class .$j);
+                    $product->addColor($color);
+                }
+            }
             
             $this->manager->persist($product);
-            $this->manager->persist($brand);
+
         }
     }
 
