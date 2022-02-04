@@ -32,8 +32,29 @@ class AppFixtures extends Fixture
         ['BLACK'],
         ['ORANGE'],
         ['GREY'],
+    ];
+
+    private const DATA_COMMENTS = [
+        [
+            'username' => 'Shandia',
+            'message' => 'Abdoululu est absent'
+        ],
+        [
+            'username' => 'Zisou',
+            'message' => 'c\'est de la merde'
+        ],
+        [
+            'username' => 'Ericu',
+            'message' => 'bah je sais pas'
+        ],
+        [
+            'username' => 'abdoul',
+            'message' => 'I see you my friend'
+        ],
 
     ];
+
+
 
     public function load(ObjectManager $manager): void
     {
@@ -51,6 +72,14 @@ class AppFixtures extends Fixture
             
             $this->manager->persist($brand);
             $this->addReference(Brands::class .$key, $brand);
+        }
+    }
+
+    public function loadComments():void{
+        foreach(self::DATA_COMMENTS as $key => [$name]){
+            foreach(DATA_COMMENTS[$key] as $detailsComment => [$detail]){
+
+            }
         }
     }
 
@@ -93,7 +122,7 @@ class AppFixtures extends Fixture
             }
             
             $this->manager->persist($product);
-
+            sleep(1);
         }
     }
 

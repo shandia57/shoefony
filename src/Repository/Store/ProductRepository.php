@@ -27,5 +27,14 @@ class ProductRepository extends ServiceEntityRepository
         return $records;
     }
 
+    public function findLastFour(): Array{
+
+        return $this
+            ->createQueryBuilder('p')
+            ->orderBy('p.createdAt', 'DESC')
+            ->setMaxResults(4)
+            ->getQuery()
+            ->getResult();
+    }
     
 }

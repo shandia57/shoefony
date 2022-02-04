@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Store\Product;
 use App\Entity\Store\Brands;
+use App\Repository\Store\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +16,7 @@ class StoreController extends AbstractController
 {
 
     private $em;
-    public function __construct( EntityManagerInterface $em)
+    public function __construct( EntityManagerInterface $em, private ProductRepository $pd)
     {
         $this->em = $em;
     }
@@ -36,9 +37,14 @@ class StoreController extends AbstractController
     {
 
         $products = $this->em->getRepository(Product::class)->findAll();
+
+        $lastProduct = $this->pd->findLastFour();
+
         $brands = $this->em->getRepository(Brands::class)->findAll();
+
+
         return $this->render('main/product-list.html.twig', [
-            'products' => $products,
+            'products' => $lastProduct,
             'brands' => $brands,
         ]);
     }

@@ -3,6 +3,7 @@
 namespace App\Entity\Store;
 
 use App\Entity\Color;
+use App\Entity\Comment;
 use App\Entity\Image;
 use App\Repository\Store\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,6 +21,7 @@ class Product
         $this->createdAt = new \DateTime();
         $this->color = new ArrayCollection();
         $this->brands = new ArrayCollection();
+        $this->Comment = new ArrayCollection();
     }
 
     /**
@@ -76,6 +78,11 @@ class Product
      * @ORM\ManyToMany(targetEntity=Color::class)
      */
     private $color;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="product")
+     */
+    private $comments;
 
 
 
@@ -209,6 +216,36 @@ class Product
     public function removeColor(Color $color): self
     {
         $this->color->removeElement($color);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getProduct() === $this) {
+                $comment->setProduct(null);
+            }
+        }
 
         return $this;
     }
