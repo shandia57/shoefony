@@ -4,7 +4,6 @@
 
 {% block content %}
 
-  
             <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                 <ol class="carousel-indicators">
                     <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
@@ -42,20 +41,9 @@
 
                 {% for product in products %}
                 <div class="col-md-3 col-sm-6 hero-feature">
-                    <div class="thumbnail">
-                        <img src="{{asset('assets/img/products/shoe-'~product.id~'.jpg')}}" alt="Nom du produit">
-                        <div class="caption">
-                            <h3>{{product.name}}</h3>
-                            <p>{{product.description}}</p>
-                            <p>
-                                <span class="badge">{{product.price}} €</span>
-                                <a href="#" class="btn btn-default">Voir la fiche</a>
-                            </p>
-                        </div>
-                    </div>
+                    {{include('productItem.html.twig')}}
                 </div>
                 {% endfor %}
-
             </div>
     
             <hr/>
@@ -69,18 +57,7 @@
             <div class="row text-center">
                 {% for product in productsCommented %}
                 <div class="col-md-3 col-sm-6 hero-feature">
-                    <div class="thumbnail">
-                        <img src="{{asset('assets/img/products/shoe-'~product.id~'.jpg')}}" alt="Nom du produit">
-                        <div class="caption">
-                            <h3>{{product.name}}</h3>
-                            <p>{{product.description}}</p>
-                            <p>
-                                <span class="badge">{{product.price}} €</span>
-                                <a href="#" class="btn btn-default">Voir la fiche</a>
-                            </p>
-                        </div>
-                    </div>
-                
+                    {{include('productItem.html.twig')}}
                 </div>
                 {% endfor %}
 

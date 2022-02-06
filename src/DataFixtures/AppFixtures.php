@@ -96,11 +96,11 @@ class AppFixtures extends Fixture
             
             $image = (new Image())
 
-                ->setUrl("shoe-".$i."jpg")
-                ->setAlt("shoe-".$i."jpg");
+                ->setUrl("shoe-".$i.".jpg")
+                ->setAlt("shoe-".$i);
 
             $product = (new Product())
-                ->setName('product '.$i)
+                ->setName('shoe-'.$i)
                 ->setDescription('Produit de description '.$i)
                 ->setLongDescription('Produit de description '.$i)
                 ->setPrice(mt_rand(10,100))

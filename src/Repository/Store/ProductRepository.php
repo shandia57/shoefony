@@ -49,7 +49,7 @@ class ProductRepository extends ServiceEntityRepository
         ->getResult();
     }
 
-    public function getProductsWithBrand(Brands $brand):array{
+    public function getProductsWithBrand(int $brand):array{
         return $this
             ->createQueryBuilder('p')
             ->where('p.Brands = :brand')

@@ -17,7 +17,7 @@ class StoreController extends AbstractController
 {
 
     private $em;
-    public function __construct( EntityManagerInterface $em, private CommentRepository $cm)
+    public function __construct( EntityManagerInterface $em, private CommentRepository $cm, private ProductRepository $pd)
     {
         $this->em = $em;
     }
@@ -25,11 +25,14 @@ class StoreController extends AbstractController
     #[Route('/store/product/{id}/{slug}', name: 'store_show_product', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function showProduct(Request $request, int $id, string $slug): Response
     {
-        
+
+        $product = $this->em->getRepository(Product::class)->find($id);
         return $this->render('store/index.html.twig', [
             'controller_name' => 'StoreController',
             'id' => $id,
-            'slug' => $slug
+            'url' => $slug,
+            'product' => $product,
+
         ]);
     }
 
@@ -39,29 +42,30 @@ class StoreController extends AbstractController
 
         $products = $this->em->getRepository(Product::class)->findAll();
 
-
         return $this->render('main/product-list.html.twig', [
             'products' => $products,
+            'brandId' => null,
         ]);
     }
 
 
-    // #[Route('/products/{brand}', name: 'store_products')]
-    // public function productsWithBrand(?int $brand): Response
-    // {
+    #[Route('/products/{brand}', name: 'store_products_brand')]
+    public function productsWithBrand(int $brand): Response
+    {
+        $products = $this->pd->getProductsWithBrand($brand);
 
-    //     $products = $this->pd->getProductsWithBrand($brand);
+        return $this->render('main/product-list.html.twig', [
+            'products' => $products,
+            'brandId' => $brand
+        ]);
+    }
 
-    //     return $this->render('main/product-list.html.twig', [
-    //         'products' => $products,
-    //     ]);
-    // }
-
-    public function listBrandscontact(): Response
+    public function listBrandscontact($brand): Response
     {
         $brands = $this->em->getRepository(Brands::class)->findAll();
         return $this->render('listBrand.html.twig', [
             'brands' => $brands,
+            'brandId' => $brand,
         ]);
     }
 }
