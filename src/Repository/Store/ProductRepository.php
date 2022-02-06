@@ -3,6 +3,7 @@
 namespace App\Repository\Store;
 
 use App\Entity\Store\Product;
+use App\Entity\Store\Brands;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -35,6 +36,27 @@ class ProductRepository extends ServiceEntityRepository
             ->setMaxResults(4)
             ->getQuery()
             ->getResult();
+    }
+
+    public function findFourProductsMoreCommented():array{
+        return $this
+        ->createQueryBuilder('p')
+        ->leftJoin('p.comments', 'c')
+        ->groupBy('p')
+        ->orderBy('COUNT(c.id)', 'DESC')
+        ->setMaxResults(4)
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function getProductsWithBrand(Brands $brand):array{
+        return $this
+            ->createQueryBuilder('p')
+            ->where('p.Brands = :brand')
+            ->setParameter('brand', $brand)
+            ->getQuery()
+            ->getResult();    
+        ;
     }
     
 }

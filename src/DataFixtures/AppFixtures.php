@@ -6,6 +6,7 @@ use App\Entity\Store\Product;
 use App\Entity\Store\Brands;
 use App\Entity\Image;
 use App\Entity\Color;
+use App\Entity\Comment;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -75,13 +76,6 @@ class AppFixtures extends Fixture
         }
     }
 
-    public function loadComments():void{
-        foreach(self::DATA_COMMENTS as $key => [$name]){
-            foreach(DATA_COMMENTS[$key] as $detailsComment => [$detail]){
-
-            }
-        }
-    }
 
     public function loadColors():void{
         foreach(self::DATA_COLORS as $key => [$name]){
@@ -113,18 +107,37 @@ class AppFixtures extends Fixture
                 ->setImage($image)
                 ->setBrands($brand);
 
+
+
+            for($k = 0; $k < random_int(0,20); $k++){
+                $randomComment = random_int(0, count(self::DATA_COMMENTS)-1);
+                $comment = (new Comment())
+                    ->setUsername(self::DATA_COMMENTS[$randomComment]['username'])
+                    ->setMessage(self::DATA_COMMENTS[$randomComment]['message'])
+                ;
+                    
+                $product->addComment($comment);
+                $this->manager->persist($comment);
+
+
+        }
+
             for($j = 0; $j < random_int(0, count(self::DATA_COLORS)-1); $j++){
                 if(random_int(0,1)){
                     /**@var Color $color */
                     $color = $this->getReference(Color::class .$j);
                     $product->addColor($color);
                 }
+
+
             }
             
             $this->manager->persist($product);
             sleep(1);
         }
     }
+
+
 
 
 

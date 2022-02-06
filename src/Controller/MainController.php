@@ -11,12 +11,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\Store\ProductRepository;
+
 
 class MainController extends AbstractController
 {
     private ContactMailer $contactMailer;
     private $em;
-    public function __construct(ContactMailer $contactMailer, EntityManagerInterface $em)
+    public function __construct(ContactMailer $contactMailer, EntityManagerInterface $em,  private ProductRepository $pd)
     {
         $this->contactMailer = $contactMailer;
         $this->em = $em;
@@ -25,8 +27,13 @@ class MainController extends AbstractController
     #[Route('/', name: 'main_homepage')]
     public function homepage(): Response
     {
+        $lastProduct = $this->pd->findLastFour();
+        $productCommented = $this->pd->findFourProductsMoreCommented();
+
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
+            'products' => $lastProduct,
+            'productsCommented' => $productCommented,
         ]);
     }
 
@@ -66,8 +73,6 @@ class MainController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-
 }
 
 

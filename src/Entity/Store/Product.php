@@ -21,7 +21,7 @@ class Product
         $this->createdAt = new \DateTime();
         $this->color = new ArrayCollection();
         $this->brands = new ArrayCollection();
-        $this->Comment = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
